@@ -7,9 +7,20 @@
 #
 # For more info visit https://github.com/pulp/plugin_template
 
+# make sure this script runs at the repo root
+cd "$(dirname "$(realpath -e "$0")")"/../../..
+REPO_ROOT="$PWD"
+
 set -euv
 
-if [ "$TEST" = "docs" ]; then
+if [ "${GITHUB_REF##refs/tags/}" = "${GITHUB_REF}" ]
+then
+  TAG_BUILD=0
+else
+  TAG_BUILD=1
+fi
+
+if [[ "$TEST" = "docs" || "$TEST" = "publish" ]]; then
   pip install -r ../pulpcore/doc_requirements.txt
   pip install -r doc_requirements.txt
 fi
@@ -24,12 +35,12 @@ if [[ "$TEST" == "plugin-from-pypi" ]]; then
 else
   PLUGIN_NAME=./pulp_container
 fi
-if [ -n "${GITHUB_REF##*/}" ]; then
+if [ "${TAG_BUILD}" = "1" ]; then
   # Install the plugin only and use published PyPI packages for the rest
   # Quoting ${TAG} ensures Ansible casts the tag as a string.
   cat >> vars/main.yaml << VARSYAML
 image:
-  name: pulp
+  name: pulp.example.com
   tag: "${TAG}"
 plugins:
   - name: pulpcore
@@ -37,15 +48,15 @@ plugins:
   - name: pulp_container
     source:  "${PLUGIN_NAME}"
 services:
-  - name: pulp
-    image: "pulp:${TAG}"
+  - name: pulp.example.com
+    image: "pulp.example.com:${TAG}"
     volumes:
       - ./settings:/etc/pulp
 VARSYAML
 else
   cat >> vars/main.yaml << VARSYAML
 image:
-  name: pulp
+  name: pulp.example.com
   tag: "${TAG}"
 plugins:
   - name: pulp_container
@@ -53,8 +64,8 @@ plugins:
   - name: pulpcore
     source: ./pulpcore
 services:
-  - name: pulp
-    image: "pulp:${TAG}"
+  - name: pulp.example.com
+    image: "pulp.example.com:${TAG}"
     volumes:
       - ./settings:/etc/pulp
 VARSYAML
