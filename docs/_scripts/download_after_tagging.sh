@@ -18,4 +18,4 @@ export REGISTRY_PATH=$(http $BASE_ADDR$DISTRIBUTION_HREF \
   | jq -r '.registry_path')
 
 echo "Pulling ${REGISTRY_PATH}:${TAG_NAME}."
-docker run $REGISTRY_PATH:$TAG_NAME
+sudo docker pull $REGISTRY_PATH:$TAG_NAME
