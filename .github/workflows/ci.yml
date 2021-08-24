@@ -6,14 +6,14 @@
 # For more info visit https://github.com/pulp/plugin_template
 ---
 name: Container CI
-on: {pull_request: {branches: ['*']}}
+on: {push: {branches: ['*']}}
 jobs:
 
 
 
   lint:
     runs-on: ubuntu-latest
-    
+
 
     steps:
       - uses: actions/checkout@v2
@@ -140,7 +140,6 @@ jobs:
 
   upgrade:
     runs-on: ubuntu-latest
-    needs: lint
     strategy:
       fail-fast: false
       matrix:
@@ -154,6 +153,7 @@ jobs:
           # by default, it uses a depth of 1
           # this fetches all history so that we can read each commit
           fetch-depth: 0
+          repository: pulp/pulp_container
 
       - uses: actions/setup-python@v2
         with:
@@ -161,6 +161,8 @@ jobs:
 
       - name: Install httpie
         run: |
+          git fetch --depth=1 origin pull/377/head:377
+          git checkout 377
           echo ::group::HTTPIE
           sudo apt-get update -yq
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install httpie
@@ -203,14 +205,7 @@ jobs:
 
       - name: After failure
         if: failure()
-        run: |
-          http --timeout 30 --check-status --pretty format --print hb https://pulp/pulp/api/v3/status/ || true
-          docker images || true
-          docker ps -a || true
-          docker logs pulp || true
-          docker exec pulp ls -latr /etc/yum.repos.d/ || true
-          docker exec pulp cat /etc/yum.repos.d/* || true
-          docker exec pulp pip3 list
+        uses: mxschmitt/action-tmate@v3.6
 
 
 
