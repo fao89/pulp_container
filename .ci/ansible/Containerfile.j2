@@ -15,7 +15,7 @@ RUN pip3 install \
 {{ " " }}django-storages[boto3] git+https://github.com/fabricio-aguiar/botocore.git@fix-100-continue
 {%- endif -%}
 {%- if azure_test | default(false) -%}
-{{ " " }}django-storages[azure]
+{{ " " }}"azure-storage-blob >= 12.0.0" git+https://github.com/fao89/django-storages.git@azure_params_url
 {%- endif -%}
 {%- for item in plugins -%}
 {%- if item.name == "pulp-certguard" -%}

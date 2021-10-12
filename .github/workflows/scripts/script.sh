@@ -60,18 +60,6 @@ if [[ "$TEST" == "plugin-from-pypi" ]]; then
   git checkout ${COMPONENT_VERSION} -- pulp_container/tests/
 fi
 
-cd ../pulp-openapi-generator
-./generate.sh pulpcore python
-pip install ./pulpcore-client
-rm -rf ./pulpcore-client
-if [[ "$TEST" = 'bindings' ]]; then
-  ./generate.sh pulpcore ruby 0
-  cd pulpcore-client
-  gem build pulpcore_client.gemspec
-  gem install --both ./pulpcore_client-0.gem
-fi
-cd $REPO_ROOT
-
 if [[ "$TEST" = 'bindings' ]]; then
   python $REPO_ROOT/.ci/assets/bindings/test_bindings.py
 fi

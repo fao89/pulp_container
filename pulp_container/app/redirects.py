@@ -1,5 +1,4 @@
 import os
-from urllib.parse import quote, urlparse, urlunparse
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -127,15 +126,9 @@ class AzureStorageRedirects(S3StorageRedirects):
         Redirect to the passed artifact's file stored in the Azure storage.
         """
         filename = os.path.basename(artifact.file.name)
-
-        content_url = artifact.file.storage.url(artifact.file.name)
-        parsed_url = urlparse(content_url)
-
-        content_type = quote(return_media_type)
-        content_disposition = quote(f"attachment; filename={filename}")
-
-        new_query = f"{parsed_url.query}&rsct={content_type}&rscd={content_disposition}"
-
-        content_url = urlunparse(parsed_url._replace(query=new_query))
-
+        parameters = {
+            "content_type": return_media_type,
+            "content_disposition": f"attachment; filename={filename}",
+        }
+        content_url = artifact.file.storage.url(artifact.file.name, parameters=parameters)
         return redirect(content_url)
