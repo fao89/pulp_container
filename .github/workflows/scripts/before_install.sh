@@ -114,13 +114,13 @@ fi
 
 cd pulp-cli
 pip install -e .
-pulp config create --base-url https://pulp --location tests/cli.toml 
+pulp config create --base-url https://pulp --location tests/cli.toml
 mkdir ~/.config/pulp
 cp tests/cli.toml ~/.config/pulp/cli.toml
 cd ..
 
 
-git clone --depth=1 https://github.com/pulp/pulpcore.git --branch master
+git clone --depth=1 https://github.com/pulp/pulpcore.git --branch 3.16
 
 cd pulpcore
 
