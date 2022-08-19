@@ -5,5 +5,8 @@ cd "$(dirname "$(realpath -e "$0")")"/../../..
 
 export BASE_ADDR=https://pulp.example.com:443
 
+# ls -al
+# pwd
+
 cd docs/_scripts/
 bash ./docs_check.sh
