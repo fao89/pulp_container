@@ -10,7 +10,9 @@ TASK_HREF=$(http POST $BASE_ADDR$SECOND_REPO_HREF'copy_tags/' \
 wait_until_task_finished $BASE_ADDR$TASK_HREF
 
 # After the task is complete, it gives us a new repository version
-TAG_COPY_VERSION=$(http $BASE_ADDR$TASK_HREF | jq -r '.created_resources | first')
+TAG_COPY_VERSION_JSON=$(http $BASE_ADDR$TASK_HREF)
+echo $TAG_COPY_VERSION_JSON
+TAG_COPY_VERSION=$(echo $TAG_COPY_VERSION_JSON | jq -r '.created_resources | first')
 
 echo "Inspect RepositoryVersion."
 http $BASE_ADDR$TAG_COPY_VERSION

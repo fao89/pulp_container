@@ -5,9 +5,9 @@ MANIFEST_DIGEST=$(http $BASE_ADDR'/pulp/api/v3/content/container/manifests/?repo
   | jq -r '.results | first | .digest')
 
 echo "Tagging the manifest."
-TASK_URL=$(http POST $BASE_ADDR$REPO_HREF'tag/' tag=$TAG_NAME digest=$MANIFEST_DIGEST \
-  | jq -r '.task')
-
+TASK_JSON=$(http POST $BASE_ADDR$REPO_HREF'tag/' tag=$TAG_NAME digest=$MANIFEST_DIGEST)
+echo $TASK_JSON
+TASK_URL=$(echo $TASK_JSON | jq -r '.task')
 wait_until_task_finished $BASE_ADDR$TASK_URL
 
 echo "Getting a reference to a newly created tag."
