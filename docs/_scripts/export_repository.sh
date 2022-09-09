@@ -16,5 +16,7 @@ REPOSITORY_HREF=$(pulp container repository -t push show \
 EXPORTER_HREF=$(http ${BASE_ADDR}/pulp/api/v3/exporters/core/pulp/ \
   name=both repositories:="[\"${REPOSITORY_HREF}\"]" \
   path=/tmp/exports/test-fixture | jq -r ".pulp_href")
+echo $REPOSITORY_HREF
+echo $EXPORTER_HREF
 TASK_HREF=$(http POST ${BASE_ADDR}${EXPORTER_HREF}exports/ | jq -r ".task")
 wait_until_task_finished ${BASE_ADDR}${TASK_HREF}
