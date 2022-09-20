@@ -6,11 +6,12 @@ DIST_BASE_PATH='test'
 # Distributions are created asynchronously.
 echo "Creating distribution \
   (name=$DIST_NAME, base_path=$DIST_BASE_PATH repository=$REPO_HREF)."
-TASK_HREF=$(http POST $BASE_ADDR/pulp/api/v3/distributions/container/container/ \
+TASK_JSON=$(http POST $BASE_ADDR/pulp/api/v3/distributions/container/container/ \
   name=$DIST_NAME \
   base_path=$DIST_BASE_PATH \
-  repository=$REPO_HREF | jq -r '.task')
-
+  repository=$REPO_HREF)
+echo $TASK_JSON
+TASK_HREF=$(echo $TASK_JSON | jq -r '.task')
 # Poll the task (here we use a function defined in docs/_scripts/base.sh)
 wait_until_task_finished $BASE_ADDR$TASK_HREF
 

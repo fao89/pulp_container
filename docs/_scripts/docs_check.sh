@@ -13,7 +13,7 @@ source repo.sh
 source remote.sh
 source sync.sh
 source distribution.sh
-source download_after_sync.sh
+# source download_after_sync.sh
 
 # Check add/remove
 source second_repo.sh
@@ -29,7 +29,7 @@ source tag_copy.sh
 
 # Check tag/untag
 source image_tagging.sh
-source download_after_tagging.sh
+# source download_after_tagging.sh
 source image_untagging.sh
 
 # Check import/export
